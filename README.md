@@ -1,4 +1,24 @@
 
+
+
+# Docker
+
+To run in Docker environment:
+
+```sh
+# Build the image, for instance
+docker build -t demo-svelte-kit:0.1 .
+
+# Run the image
+docker run --rm --name svelte-kit-demo -p 80:3000  demo-svelte-kit:0.1
+```
+
+References:
+- https://www.digitalocean.com/community/tutorials/how-to-build-a-node-js-application-with-docker
+- https://svelte.dev/docs/kit/adapter-node
+
+# Coolify
+
 This is based on: https://dev.to/mandrasch/deploy-sveltekit-with-ssr-on-coolify-hetzner-vps-24c5
 
 # sv
