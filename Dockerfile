@@ -1,8 +1,10 @@
 # Build stage
+
 # https://hub.docker.com/_/node
 FROM node:22.19-alpine3.22 AS builder
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+# By default, the Docker Node image includes a non-root node user that you can use to avoid running your application container as root. It is a recommended security practice to avoid running containers as root and to restrict capabilities within the container to only those required to run its processes. We will therefore use the node user’s home directory as the working directory for our application and set them as our user inside the container
+RUN mkdir -p /home/node/app && chown -R node:node /home/node/app
 
 WORKDIR /home/node/app
 
@@ -19,23 +21,27 @@ COPY --chown=node:node . .
 
 RUN npm run build
 
-# Production stage
+# Remove development dependencies
+RUN npm prune --omit=dev
+
+# Final stage
+
 FROM node:22.19-alpine3.22
 
-RUN mkdir -p /home/node/app/build && chown -R node:node /home/node/app
+RUN mkdir -p /home/node/app && chown -R node:node /home/node/app
 
 WORKDIR /home/node/app
 
-COPY --chown=node:node --from=builder /home/node/app/package*.json ./
-
 USER node
 
-RUN npm ci --omit dev
-
+COPY --chown=node:node --from=builder /home/node/app/package.json ./
 COPY --chown=node:node --from=builder /home/node/app/build ./build/
+COPY --chown=node:node --from=builder /home/node/app/node_modules ./node_modules/
 
-ENV PORT=3000
-EXPOSE $PORT
+# Sveltekit runs on port 3000 by default
+EXPOSE 3000
+
+ENV NODE_ENV=production
 
 # Run index.js in the build folder
 CMD ["node", "build"]

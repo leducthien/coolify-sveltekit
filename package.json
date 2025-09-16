@@ -6,6 +6,9 @@
 	"engines": {
 		"node": "^22.0.0"
 	},
+	"volta": {
+		"node": "22.19.0"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",

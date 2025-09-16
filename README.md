@@ -7,10 +7,10 @@ To run in Docker environment:
 
 ```sh
 # Build the image, for instance
-docker build -t demo-svelte-kit:0.1 .
+docker build -t svelte-kit-demo .
 
 # Run the image
-docker run --rm --name svelte-kit-demo -p 80:3000  demo-svelte-kit:0.1
+docker run --rm -it --name svelte-kit-demo -p 80:3000  svelte-kit-demo
 ```
 
 References:
