@@ -16,6 +16,7 @@ docker run --rm -it --name svelte-kit-demo -p 80:3000  svelte-kit-demo
 References:
 - https://www.digitalocean.com/community/tutorials/how-to-build-a-node-js-application-with-docker
 - https://svelte.dev/docs/kit/adapter-node
+- https://khromov.se/dockerizing-your-sveltekit-applications-a-practical-guide/
 
 # Coolify
 
