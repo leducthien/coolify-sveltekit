@@ -1,7 +1,9 @@
+ARG NODE_VER=22.19-alpine3.22
+
 # Build stage
 
-# Node image from here: https://hub.docker.com/_/node
-FROM node:22.19-alpine3.22 AS builder
+# Node image is from: https://hub.docker.com/_/node
+FROM node:${NODE_VER} AS builder
 
 # By default, the Docker Node image includes a non-root node user that you can use to avoid running your application container as root. It is a recommended security practice to avoid running containers as root and to restrict capabilities within the container to only those required to run its processes. We will therefore use the node user’s home directory as the working directory for our application and set them as our user inside the container
 RUN mkdir -p /home/node/app && chown -R node:node /home/node/app
@@ -26,7 +28,7 @@ RUN npm prune --omit=dev
 
 # Final stage
 
-FROM node:22.19-alpine3.22
+FROM node:${NODE_VER}
 
 # Install curl for the healthcheck
 RUN apk add --no-cache curl
@@ -46,9 +48,8 @@ EXPOSE 3000
 
 ENV NODE_ENV=production
 
-# Healthcheck: fail if the endpoint isn’t reachable
-HEALTHCHECK --interval=30s --timeout=30s --retries=3 \
-  CMD curl -f http://localhost:3000/ || exit 1
+# Healthcheck: fail if the endpoint isn’t reachable. This is for docker engine and Coolify heathcheck feature https://coolify.io/docs/knowledge-base/health-checks
+HEALTHCHECK --start-period=30s --interval=30s --timeout=30s --retries=3 CMD curl -f http://localhost:3000/ || exit 1
 
 # Run index.js in the build folder
 CMD ["node", "build"]
